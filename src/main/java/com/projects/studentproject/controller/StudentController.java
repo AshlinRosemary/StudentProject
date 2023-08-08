@@ -2,6 +2,7 @@ package com.projects.studentproject.controller;
 
 import com.projects.studentproject.bean.Student;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -25,6 +26,19 @@ public class StudentController {
         students.add(new Student(3,"Rosy",7));
         students.add(new Student(4,"Mary",8));
         return students;
+    }
+    @GetMapping("pv/{id}/{name}/{class}")
+    // id is variable binded with method argument studentid
+    public Student studentPathVariable(@PathVariable("id") int studentid,
+                                       @PathVariable("name") String name,
+                                       @PathVariable("class")int grade){
+        return new Student(studentid, name,grade);
+        //Id is dynamically passed to the student details , just change
+        // http://localhost:8080/pv/2/Lissy/10
+        /*
+        JSON o/p
+        {"id":2,"name":"Lissy","grade":10}
+         */
     }
 
 }
