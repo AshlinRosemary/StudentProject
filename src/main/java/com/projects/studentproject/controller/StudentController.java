@@ -1,9 +1,8 @@
 package com.projects.studentproject.controller;
 
 import com.projects.studentproject.bean.Student;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,4 +40,44 @@ public class StudentController {
          */
     }
 
+    // http://localhost:8080/student/query?id=1....>> So that query parameter(query?id=1) get BIND
+    // to Method argument (int id)
+    @GetMapping("student/query")
+    public Student studentRequestParam(@RequestParam int id){
+        return new Student(id,"Nila",10);
+    }
+//@RequestParam String name,
+//  @RequestParam int grade
+
+/*
+How to handle multiple query parameters in request url
+ */
+    //http://localhost:8080/student/query2?id=1&name=Ashli&grade=7
+    @GetMapping("student/query2")
+    public Student studentRequestParam2(@RequestParam int id,
+                                        @RequestParam String name,
+                                        @RequestParam int grade){
+        return new Student(id,name,grade);
+    }
+
+    //RestAPI that handles @PostMapping Req
+    @PostMapping("create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Student createStudent(@RequestBody Student student){
+        System.out.println(student.getId());
+        System.out.println(student.getName());
+        System.out.println(student.getGrade());
+        return student;
+    }
+
+    //Sprinngboot Rest API for @PutMapping
+    @PutMapping("update/{id}")
+    public Student updateStudent(@RequestBody Student student,
+                                 @PathVariable("id") int studentid){
+
+        System.out.println(student.getName());
+        System.out.print(student.getGrade());
+        student.setId(studentid);
+        return student;
+    }
 }
