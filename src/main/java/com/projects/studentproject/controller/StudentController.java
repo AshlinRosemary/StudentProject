@@ -2,6 +2,7 @@ package com.projects.studentproject.controller;
 
 import com.projects.studentproject.bean.Student;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -11,27 +12,33 @@ import java.util.List;
 public class StudentController {
 //Here passing Student class as datatype , getStudent method to get our JSOn
     @GetMapping("student")
-    public Student getStudent(){
+    public ResponseEntity<Student> getStudent(){
         Student student=new Student(1,"Ashli",10);
-        return student;
+        //return new ResponseEntity<>(student,HttpStatus.OK) ;
+        return ResponseEntity.ok().
+                header("Custom-header","ashli").
+                body(student);
     }
     // http://localhost:8080/students
     @GetMapping("students")
-    public List<Student> getStudents(){
+    public ResponseEntity<List<Student>> getStudents(){
 
         List<Student> students=new ArrayList<>();
         students.add(new Student(1,"Mariam",4));
         students.add(new Student(2,"Asla",5));
         students.add(new Student(3,"Rosy",7));
         students.add(new Student(4,"Mary",8));
-        return students;
+        return ResponseEntity.ok(students);
     }
     @GetMapping("pv/{id}/{name}/{class}")
     // id is variable binded with method argument studentid
-    public Student studentPathVariable(@PathVariable("id") int studentid,
+    public ResponseEntity<Student> studentPathVariable(@PathVariable("id") int studentid,
                                        @PathVariable("name") String name,
                                        @PathVariable("class")int grade){
-        return new Student(studentid, name,grade);
+
+        Student student=new Student(studentid, name,grade);
+        //return new ResponseEntity<>(student,HttpStatus.OK);
+        return ResponseEntity.ok(student);
         //Id is dynamically passed to the student details , just change
         // http://localhost:8080/pv/2/Lissy/10
         /*
@@ -63,21 +70,29 @@ How to handle multiple query parameters in request url
     //RestAPI that handles @PostMapping Req
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Student createStudent(@RequestBody Student student){
+    public ResponseEntity<Student> createStudent(@RequestBody Student student){
         System.out.println(student.getId());
         System.out.println(student.getName());
         System.out.println(student.getGrade());
-        return student;
+        return new ResponseEntity<>(student,HttpStatus.CREATED);
     }
 
     //Sprinngboot Rest API for @PutMapping
     @PutMapping("update/{id}")
-    public Student updateStudent(@RequestBody Student student,
+    public ResponseEntity<Student> updateStudent(@RequestBody Student student,
                                  @PathVariable("id") int studentid){
 
         System.out.println(student.getName());
         System.out.print(student.getGrade());
         student.setId(studentid);
-        return student;
+        return ResponseEntity.ok(student);
+    }
+
+
+    //Rest API for @DeleteMapping
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<String> deleteStudent(@PathVariable("id") int studentId){
+        System.out.println(studentId);
+        return ResponseEntity.ok("ID deleted sucessfully") ;
     }
 }
